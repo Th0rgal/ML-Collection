@@ -11,18 +11,18 @@ from pygments.lexers import PythonLexer  # type: ignore
 from pygments.formatters import HtmlFormatter  # type: ignore
 from IPython.display import display, HTML  # type: ignore
 
-from PIL import Image                  # type: ignore
+from PIL import Image  # type: ignore
 import numpy as np
-import pandas as pd                    # type: ignore
+import pandas as pd  # type: ignore
 
-from sklearn.model_selection import StratifiedShuffleSplit    # type: ignore
+from sklearn.model_selection import StratifiedShuffleSplit  # type: ignore
 
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox  # type: ignore
-from matplotlib.figure import Figure                          # type: ignore
-from matplotlib.axes import Axes                              # type: ignore
-from matplotlib.colors import LinearSegmentedColormap         # type: ignore
+from matplotlib.figure import Figure  # type: ignore
+from matplotlib.axes import Axes  # type: ignore
+from matplotlib.colors import LinearSegmentedColormap  # type: ignore
 
-import seaborn as sns                                         # type: ignore
+import seaborn as sns  # type: ignore
 
 sns.set()
 warnings.simplefilter(action="ignore", category=FutureWarning)
@@ -42,17 +42,17 @@ def show_color_channels(img: Image.Image) -> Figure:
     Return a figure displaying the image together with its red, green, and blue layers
     """
     M = np.array(img)
-    fig = Figure(figsize=(30, 5));
+    fig = Figure(figsize=(30, 5))
     (ax, axr, axg, axb) = fig.subplots(1, 4)  # Quatre zones de dessin
     # Dessin de l'image et de ses trois couches
     ax.imshow(M)
-    imgr = axr.imshow(M[:,:,0], cmap=black_red_cmap,   vmin=0, vmax=255)
-    imgg = axg.imshow(M[:,:,1], cmap=black_green_cmap, vmin=0, vmax=255)
-    imgb = axb.imshow(M[:,:,2], cmap=black_blue_cmap,  vmin=0, vmax=255)
+    imgr = axr.imshow(M[:, :, 0], cmap=black_red_cmap, vmin=0, vmax=255)
+    imgg = axg.imshow(M[:, :, 1], cmap=black_green_cmap, vmin=0, vmax=255)
+    imgb = axb.imshow(M[:, :, 2], cmap=black_blue_cmap, vmin=0, vmax=255)
     # Ajout des barres d'échelle de couleur aux images
-    fig.colorbar(imgr, ax=axr);
-    fig.colorbar(imgg, ax=axg);
-    fig.colorbar(imgb, ax=axb);
+    fig.colorbar(imgr, ax=axr)
+    fig.colorbar(imgg, ax=axg)
+    fig.colorbar(imgb, ax=axb)
 
     return fig
 
@@ -62,9 +62,8 @@ def foreground_filter(
 ) -> np.ndarray:
     """Create a black and white image outlining the foreground."""
     M = img if type(img) == np.ndarray else np.array(img)
-    G = np.min(M[:,:,0:3], axis=2)
+    G = np.min(M[:, :, 0:3], axis=2)
     return G < theta
-
 
 
 def transparent_background_filter(
@@ -82,10 +81,10 @@ def transparent_background_filter(
 def redness(img: Image.Image) -> float:
     """Return the redness of a PIL image."""
     M = np.array(img)
-    print(img)
-    R = M[:,:,0]*1.0
-    G = M[:,:,1]*1.0
-    return np.mean((R-G)[foreground_filter(img)])
+    R = M[:, :, 0] * 1.0
+    G = M[:, :, 1] * 1.0
+    return np.mean((R - G)[foreground_filter(img)])
+
 
 def elongation(img: Image.Image) -> float:
     """Extract the scalar value elongation from a PIL image."""
@@ -197,9 +196,7 @@ def color_histogram(img: Image.Image) -> Figure:
     colors = ["red", "green", "blue"]
     fig = Figure(figsize=(12, 6))
     ax = fig.add_subplot()
-    ax.hist(
-        MM, bins=10, density=True, histtype="bar", color=colors, label=colors
-    )
+    ax.hist(MM, bins=10, density=True, histtype="bar", color=colors, label=colors)
     ax.set_xlabel("Pixel amplitude in each color channel")
     ax.set_ylabel("Pixel density")
     return fig
